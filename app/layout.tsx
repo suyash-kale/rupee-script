@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import type { Metadata } from 'next';
+import { Poppins } from 'next/font/google';
 
-import "./globals.css";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import './globals.css';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 
-const poppins = Poppins({ weight: ["200", "400", "600"], subsets: ["latin"] });
+const poppins = Poppins({ weight: ['200', '400', '600'], subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Rupee Script",
-  description: "Be a step ahead in your financial journey.",
+  title: 'Rupee Script',
+  description: 'Be a step ahead in your financial journey.',
 };
 
 // applicable to all the pages & groups

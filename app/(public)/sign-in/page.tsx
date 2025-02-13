@@ -1,21 +1,21 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-import { auth, signIn } from "@/auth";
-import { Button } from "@/components/ui/button";
+import { auth, signIn } from '@/auth';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 async function Page() {
   const session = await auth();
 
   if (session) {
-    return redirect("/");
+    return redirect('/');
   }
   return (
     <div className="flex flex-col h-full items-center justify-center">
@@ -29,8 +29,8 @@ async function Page() {
         <CardContent>
           <form
             action={async () => {
-              "use server";
-              await signIn("google");
+              'use server';
+              await signIn('google');
             }}
           >
             <Button variant="outline" className="w-full">

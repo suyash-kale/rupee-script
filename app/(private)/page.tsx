@@ -1,6 +1,10 @@
-import Link from "next/link";
+import { auth } from '@/auth';
+import Link from 'next/link';
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+  console.log(session);
+
   return (
     <div>
       Home Page
