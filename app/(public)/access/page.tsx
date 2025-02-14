@@ -14,9 +14,11 @@ import {
 async function Page() {
   const session = await auth();
 
+  // in case user is signed in, redirect to /dashboard
   if (session) {
-    return redirect('/');
+    return redirect('/dashboard');
   }
+
   return (
     <div className="flex flex-col h-full items-center justify-center">
       <Card className="w-[400px]">
@@ -40,7 +42,7 @@ async function Page() {
                   fill="currentColor"
                 />
               </svg>
-              Login with Google
+              Access with Google
             </Button>
           </form>
         </CardContent>
