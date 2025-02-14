@@ -5,9 +5,10 @@ const MONGO_URL = process.env.MONGO_URL;
 let connection: Mongoose;
 
 if (!MONGO_URL) {
-  throw new Error('Please define MONGO_URL environment variable');
+  throw new Error('Please define MONGO_URL environment variable.');
 }
 
+// establish connection with MongoDB
 const connect = async () => {
   if (!connection) {
     connection = await mongoose.connect(MONGO_URL);

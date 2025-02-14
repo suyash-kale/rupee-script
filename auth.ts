@@ -6,27 +6,36 @@ import { exist, signInWithGoogle } from '@/services/user';
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google],
   callbacks: {
-    async signIn({ user }) {
-      if (user.name && user.email) {
-        signInWithGoogle({
-          email: user.email,
-          name: user.name,
-          picture: user.image,
+    async signIn({ user: { name, email, image } }) {
+      if (name && email) {
+        // signing up the user if not exists
+        await signInWithGoogle({
+          name,
+          email,
+          image,
         });
       }
       return true;
     },
     async jwt({ token, profile }) {
       if (profile?.email) {
+        // getting the user from the database
         const user = await exist(profile.email);
         if (user) {
+          // updating the token with the database user
           token.id = user._id;
+          token.user = {
+            name: user.name,
+            email: user.email,
+            image: user.image,
+          };
         }
       }
       return token;
     },
     async session({ session, token }) {
-      Object.assign(session, { id: token.id });
+      // updating the session with the updated token
+      Object.assign(session, { id: token.id, user: token.user });
       return session;
     },
   },
