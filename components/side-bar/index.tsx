@@ -1,7 +1,13 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Landmark, MoreHorizontal, ChevronRight, Plus } from 'lucide-react';
+import {
+  Landmark,
+  MoreHorizontal,
+  ChevronRight,
+  Plus,
+  LayoutList,
+} from 'lucide-react';
 
 import Logo from '@/assets/logo.jpg';
 import { auth } from '@/auth';
@@ -71,6 +77,12 @@ export const SideBar: FC = async () => {
                         align="start"
                         className="min-w-56 rounded-lg"
                       >
+                        <DropdownMenuItem asChild>
+                          <Link href="account/list">
+                            <LayoutList />
+                            Account List
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link href="account/add">
                             <Plus />

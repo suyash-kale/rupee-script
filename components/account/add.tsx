@@ -1,10 +1,11 @@
 'use client';
 
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useState } from 'react';
+import { RotateCcw, Save } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 import { DATES } from '@/consts/dates';
 import { AccountCategory } from '@/entities/account';
@@ -27,56 +28,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Heading } from '@/components/template/heading';
-import { RotateCcw } from 'lucide-react';
-
-// form schema definition
-const Schema = z
-  .object({
-    title: z.string().min(2).max(50),
-    category: z.nativeEnum(AccountCategory),
-    balance: z.string().transform((num) => parseInt(num)),
-    bill: z
-      .string()
-      .min(0)
-      .max(31)
-      .transform((num) => parseInt(num))
-      .optional(),
-    due: z
-      .string()
-      .min(0)
-      .max(31)
-      .transform((num) => parseInt(num))
-      .optional(),
-  })
-  .refine(
-    (data) => {
-      // making sure bill in required for credit category
-      if (data.category === AccountCategory.Credit && !data.bill) {
-        return false;
-      }
-      return true;
-    },
-    {
-      path: ['bill'],
-      message: 'Required',
-    },
-  )
-  .refine(
-    (data) => {
-      // making sure due in required for credit category
-      if (data.category === AccountCategory.Credit && !data.due) {
-        return false;
-      }
-      return true;
-    },
-    {
-      path: ['due'],
-      message: 'Required',
-    },
-  );
-
-// form schema type
-type SchemaType = z.infer<typeof Schema>;
+import { Schema, SchemaType } from '@/app/(private)/account/add/shared';
+import { post } from '@/services/account';
 
 // add account component
 export const Add: FC = () => {
@@ -87,41 +40,74 @@ export const Add: FC = () => {
       title: '',
       balance: 0,
     },
+    mode: 'onChange',
   });
+
+  // loading state for form
+  const [loading, setLoading] = useState<boolean>(false);
 
   // form category value
   const category = form.watch('category');
 
-  // handle form submit
-  const onSubmit = useCallback(() => {}, []);
+  // handle form reset
+  const onReset = useCallback(() => {
+    form.setFocus('title');
+    form.reset();
+  }, [form]);
 
-  // handle form error
-  const onError = useCallback(
+  // handle form submit
+  const onSubmit = useCallback(
+    async (formData: SchemaType) => {
+      setLoading(true);
+      const { message, status, errors } = await post(formData);
+      // setting service errors to form errors
+      for (const k in errors) {
+        const key = k as keyof SchemaType;
+        form.setError(key, { message: errors[key] });
+      }
+      // showing toast message
+      if (message) {
+        if (status === 'error') {
+          toast.error(message);
+        } else if (status === 'success') {
+          toast.success(message);
+          redirect('/account');
+        }
+      }
+      setLoading(false);
+    },
+    [form],
+  );
+
+  // handle form errors
+  const onErrors = useCallback(
     () => toast.error('Please fill all required fields'),
     [],
   );
 
-  // handle form reset
-  const onReset = useCallback(() => {
-    form.reset();
-  }, [form]);
-
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit, onError)}
+        onSubmit={form.handleSubmit(onSubmit, onErrors)}
         className="flex flex-col h-full"
-        noValidate
       >
         <Heading
           title="Add Account"
           description="Add a new account to your list"
           links={[{ title: 'Account', href: '/account' }, { title: 'Add' }]}
         >
-          <Button variant="ghost" type="reset" onClick={onReset}>
+          <Button
+            variant="ghost"
+            type="reset"
+            onClick={onReset}
+            disabled={loading}
+          >
             <RotateCcw />
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={loading}>
+            <Save />
+            Submit
+          </Button>
         </Heading>
         <div className="flex-1">
           <div className="grid grid-cols-5">

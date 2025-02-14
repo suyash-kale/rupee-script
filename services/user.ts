@@ -1,3 +1,5 @@
+'use server';
+
 import { UserType } from '@/entities/user';
 import connect from '@/mongo/connect';
 import User from '@/mongo/entities/user';

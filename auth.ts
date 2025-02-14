@@ -23,8 +23,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const user = await exist(profile.email);
         if (user) {
           // updating the token with the database user
-          token.id = user._id;
           token.user = {
+            id: user._id,
             name: user.name,
             email: user.email,
             image: user.image,
@@ -35,7 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       // updating the session with the updated token
-      Object.assign(session, { id: token.id, user: token.user });
+      Object.assign(session, { user: token.user });
       return session;
     },
   },

@@ -9,6 +9,7 @@ export enum AccountCategory {
 
 // account type definition
 export interface AccountType {
+  _id: string;
   // user ref
   user: Types.ObjectId;
   // category of account

@@ -25,7 +25,10 @@ export const Breadcrumbs: FC<BreadcrumbsProps> = ({ links }) => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink className="flex gap-1 items-center" href="/">
+              <BreadcrumbLink
+                className="flex gap-1 items-center"
+                href="/dashboard"
+              >
                 <Home className="size-3" />
               </BreadcrumbLink>
             </BreadcrumbItem>
