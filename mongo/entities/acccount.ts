@@ -14,8 +14,6 @@ const AccountSchema = new Schema<AccountType>({
   bill: { type: Number },
   // credit card due date
   due: { type: Number },
-  // outstanding of credit card
-  outstanding: { type: Number },
 });
 
 export default mongoose.models.Account ||

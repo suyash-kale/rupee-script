@@ -4,13 +4,9 @@ import { redirect } from 'next/navigation';
 
 import '@/app/globals.css';
 import { auth } from '@/auth';
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/sonner';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { SideBar } from '@/components/side-bar';
-import { Separator } from '@/components/ui/separator';
 import Footer from '@/components/footer';
 
 const poppins = Poppins({ weight: ['200', '400', '600'], subsets: ['latin'] });
@@ -43,19 +39,12 @@ export default async function RootLayout({
           <SideBar />
           <SidebarInset className="bg-gray-50">
             <div className="flex flex-col h-full">
-              <main className="flex-1">
-                <div className="flex">
-                  <SidebarTrigger />
-                  <Separator orientation="vertical" />
-                </div>
-                <Separator />
-
-                {children}
-              </main>
+              <main className="flex-1">{children}</main>
               <Footer />
             </div>
           </SidebarInset>
         </SidebarProvider>
+        <Toaster />
       </body>
     </html>
   );

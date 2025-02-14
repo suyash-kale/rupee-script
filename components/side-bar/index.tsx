@@ -72,9 +72,9 @@ export const SideBar: FC = async () => {
                         className="min-w-56 rounded-lg"
                       >
                         <DropdownMenuItem asChild>
-                          <Link href="account/create">
+                          <Link href="account/add">
                             <Plus />
-                            Create
+                            Add Account
                           </Link>
                         </DropdownMenuItem>
                       </DropdownMenuContent>

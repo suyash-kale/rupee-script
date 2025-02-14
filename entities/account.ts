@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 
 export enum AccountCategory {
   // bank account
-  Cash = 'CASH',
+  Bank = 'CASH',
   // credit card
   Credit = 'CREDIT',
 }
@@ -20,12 +20,4 @@ export interface AccountType {
   bill?: number;
   // credit card due date
   due?: number;
-  // outstanding of credit card
-  outstanding?: number;
 }
-
-// fields to be displayed basis on account category
-export const Config: { [c in AccountCategory]: Array<keyof AccountType> } = {
-  [AccountCategory.Cash]: ['balance'],
-  [AccountCategory.Credit]: ['outstanding', 'bill', 'due'],
-};
