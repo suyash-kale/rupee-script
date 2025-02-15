@@ -1,5 +1,6 @@
 import { FC, Fragment } from 'react';
 import { Home } from 'lucide-react';
+import Link from 'next/link';
 
 import {
   Breadcrumb,
@@ -25,22 +26,20 @@ export const Breadcrumbs: FC<BreadcrumbsProps> = ({ links }) => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink
-                className="flex gap-1 items-center"
-                href="/dashboard"
-              >
-                <Home className="size-3" />
+              <BreadcrumbLink className="flex gap-1 items-center" asChild>
+                <Link href="/dashboard">
+                  <Home className="size-3" />
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             {links.map((link) => (
               <Fragment key={`breadcrumb-${link.title}`}>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbLink
-                    className="flex gap-1 items-center"
-                    href={link.href}
-                  >
-                    {link.title}
+                  <BreadcrumbLink className="flex gap-1 items-center" asChild>
+                    <Link href={link?.href ?? 'javascript:void(0);'}>
+                      {link.title}
+                    </Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </Fragment>

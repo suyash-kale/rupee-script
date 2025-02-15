@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
+// access page for user sign in or sign up
 async function Page() {
   const session = await auth();
 

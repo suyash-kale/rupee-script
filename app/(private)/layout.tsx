@@ -39,7 +39,7 @@ export default async function RootLayout({
           <SideBar />
           <SidebarInset className="bg-gray-50">
             <div className="flex flex-col h-full">
-              <main className="flex-1">{children}</main>
+              <main className="flex-1 flex flex-col">{children}</main>
               <Footer />
             </div>
           </SidebarInset>

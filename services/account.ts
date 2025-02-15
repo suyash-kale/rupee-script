@@ -9,10 +9,13 @@ import {
   StateType,
 } from '@/app/(private)/account/add/shared';
 import { auth } from '@/auth';
+import { AccountType } from '@/entities/account';
+import connect from '@/mongo/connect';
 
 // post account service
 // adding account to database
 export const post = async (data: SchemaType): Promise<StateType> => {
+  await connect();
   try {
     // validating form data
     await Schema.parseAsync(data);
@@ -65,4 +68,9 @@ export const post = async (data: SchemaType): Promise<StateType> => {
       errors: {},
     };
   }
+};
+
+export const get = async (): Promise<undefined | Array<AccountType>> => {
+  await connect();
+  return await Account.find();
 };

@@ -88,8 +88,8 @@ export const Add: FC = () => {
   return (
     <Form {...form}>
       <form
+        className="flex-1 flex flex-col"
         onSubmit={form.handleSubmit(onSubmit, onErrors)}
-        className="flex flex-col h-full"
       >
         <Heading
           title="Add Account"

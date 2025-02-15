@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -39,6 +39,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { get } from '@/services/account';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // sidebar for private groups
 export const SideBar: FC = async () => {
@@ -78,13 +80,13 @@ export const SideBar: FC = async () => {
                         className="min-w-56 rounded-lg"
                       >
                         <DropdownMenuItem asChild>
-                          <Link href="account/list">
+                          <Link href="/account">
                             <LayoutList />
                             Account List
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="account/add">
+                          <Link href="/account/add">
                             <Plus />
                             Add Account
                           </Link>
@@ -101,11 +103,9 @@ export const SideBar: FC = async () => {
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton asChild>
-                        <Link href="/">IDBI</Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
+                    <Suspense fallback={<FallbackSubItem />}>
+                      <Accounts />
+                    </Suspense>
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
@@ -121,3 +121,23 @@ export const SideBar: FC = async () => {
     </Sidebar>
   );
 };
+
+// get the list of accounts
+const Accounts: FC = async () => {
+  const accounts = await get();
+  return accounts?.map((account) => (
+    <SidebarMenuSubItem key={`sidebar-account-${account._id}`}>
+      <SidebarMenuSubButton asChild>
+        <Link href={`/account/${account._id}`}>{account.title}</Link>
+      </SidebarMenuSubButton>
+    </SidebarMenuSubItem>
+  ));
+};
+
+// skeleton loader for the account list
+const FallbackSubItem: FC = () => (
+  <>
+    <Skeleton className="h-[28px] w-full" />
+    <Skeleton className="h-[28px] w-full" />
+  </>
+);
