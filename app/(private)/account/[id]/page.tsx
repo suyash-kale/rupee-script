@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { Landmark } from 'lucide-react';
 
 import { Heading } from '@/components/template/heading';
 import { DETAIL } from '@/services/account';
@@ -31,7 +32,8 @@ async function Page({ params }: PageProps) {
   return (
     <Heading
       title={
-        <div className="flex items-start gap-2">
+        <div className="flex items-center gap-2">
+          <Landmark />
           {account.title}
           <Badge variant="outline">
             {

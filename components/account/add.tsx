@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { FC, useCallback, useState } from 'react';
-import { RotateCcw, Save } from 'lucide-react';
+import { Plus, RotateCcw, Save } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 import { DATES } from '@/consts/dates';
@@ -33,6 +33,7 @@ import {
   SchemaPostType,
 } from '@/app/(private)/account/add/shared-post';
 import { POST } from '@/services/account';
+import { Busy } from '@/components/atom/busy';
 
 // add account component
 export const Add: FC = () => {
@@ -95,7 +96,12 @@ export const Add: FC = () => {
         onSubmit={form.handleSubmit(onSubmit, onErrors)}
       >
         <Heading
-          title="Add Account"
+          title={
+            <span className="flex items-center gap-2">
+              <Plus />
+              Add Account
+            </span>
+          }
           description="Add a new account to your list"
           links={[{ title: 'Account', href: '/account' }, { title: 'Add' }]}
         >
@@ -115,7 +121,7 @@ export const Add: FC = () => {
         <div className="flex-1">
           <div className="grid grid-cols-5">
             <Card className="col-span-3 col-start-2 px-4 py-3 mt-4">
-              <div className="grid grid-cols-2 gap-4">
+              <Busy className="grid grid-cols-2 gap-4" loading={true}>
                 <FormField
                   control={form.control}
                   name="title"
@@ -242,7 +248,7 @@ export const Add: FC = () => {
                     </FormItem>
                   )}
                 />
-              </div>
+              </Busy>
             </Card>
           </div>
         </div>

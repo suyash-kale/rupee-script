@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { LayoutList, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { FC, Suspense } from 'react';
 
@@ -14,7 +14,12 @@ function Page() {
   return (
     <>
       <Heading
-        title="Account List"
+        title={
+          <span className="flex items-center gap-2">
+            <LayoutList />
+            Account List
+          </span>
+        }
         description="List of all your accounts"
         links={[{ title: 'Account' }]}
       >
