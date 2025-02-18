@@ -1,12 +1,13 @@
-import { Pencil, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { FC, Suspense } from 'react';
 
 import { Heading } from '@/components/template/heading';
 import { Button } from '@/components/ui/button';
-import { get } from '@/services/account';
+import { GET } from '@/services/account';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 
 // account list page
 function Page() {
@@ -35,27 +36,27 @@ function Page() {
 
 // fetching and displaying accounts from the database
 const List: FC = async () => {
-  const accounts = await get();
+  const accounts = await GET();
   return (
     <div className="grid grid-cols-3 gap-3">
       {accounts?.map((account) => (
-        <Card key={account._id} className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardHeader className="p-0">
-                <CardTitle>{account.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                Balance: {account.balance}
-              </CardContent>
-            </div>
-            <Button variant="outline" size="icon" asChild>
-              <Link href={`/account/${account._id}`}>
-                <Pencil />
-              </Link>
-            </Button>
-          </div>
-        </Card>
+        <Link
+          href={`/account/${account._id}`}
+          key={account._id}
+          className="relative"
+        >
+          <Badge variant="outline" className="absolute top-0 right-0">
+            {account.category}
+          </Badge>
+          <Card key={account._id} className="p-4">
+            <CardHeader className="p-0">
+              <CardTitle>{account.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              Balance: {account.balance}
+            </CardContent>
+          </Card>
+        </Link>
       ))}
     </div>
   );

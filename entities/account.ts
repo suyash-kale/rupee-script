@@ -21,4 +21,6 @@ export interface AccountType {
   bill?: number;
   // credit card due date
   due?: number;
+  // account deletion status
+  deleted: boolean;
 }

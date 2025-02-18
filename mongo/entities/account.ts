@@ -14,6 +14,8 @@ const AccountSchema = new Schema<AccountType>({
   bill: { type: Number },
   // credit card due date
   due: { type: Number },
+  // account deletion status
+  deleted: { type: Boolean, default: false },
 });
 
 export default mongoose.models.Account ||

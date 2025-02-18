@@ -28,14 +28,17 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Heading } from '@/components/template/heading';
-import { Schema, SchemaType } from '@/app/(private)/account/add/shared';
-import { post } from '@/services/account';
+import {
+  SchemaPost,
+  SchemaPostType,
+} from '@/app/(private)/account/add/shared-post';
+import { POST } from '@/services/account';
 
 // add account component
 export const Add: FC = () => {
   // form hook
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(Schema),
+  const form = useForm<SchemaPostType>({
+    resolver: zodResolver(SchemaPost),
     defaultValues: {
       title: '',
       balance: 0,
@@ -57,12 +60,12 @@ export const Add: FC = () => {
 
   // handle form submit
   const onSubmit = useCallback(
-    async (formData: SchemaType) => {
+    async (formData: SchemaPostType) => {
       setLoading(true);
-      const { message, status, errors } = await post(formData);
+      const { message, status, errors } = await POST(formData);
       // setting service errors to form errors
       for (const k in errors) {
-        const key = k as keyof SchemaType;
+        const key = k as keyof SchemaPostType;
         form.setError(key, { message: errors[key] });
       }
       // showing toast message
@@ -104,7 +107,7 @@ export const Add: FC = () => {
           >
             <RotateCcw />
           </Button>
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" loading={loading}>
             <Save />
             Submit
           </Button>
@@ -122,6 +125,7 @@ export const Add: FC = () => {
                       <FormControl>
                         <Input
                           placeholder="Account Title"
+                          disabled={loading}
                           autoFocus
                           {...field}
                         />
@@ -139,6 +143,7 @@ export const Add: FC = () => {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        disabled={loading}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -169,6 +174,7 @@ export const Add: FC = () => {
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value?.toString()}
+                          disabled={loading}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -198,6 +204,7 @@ export const Add: FC = () => {
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value?.toString()}
+                          disabled={loading}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -227,6 +234,7 @@ export const Add: FC = () => {
                         <Input
                           placeholder="Account balance"
                           type="number"
+                          disabled={loading}
                           {...field}
                         />
                       </FormControl>

@@ -39,7 +39,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { get } from '@/services/account';
+import { GET } from '@/services/account';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // sidebar for private groups
@@ -124,7 +124,8 @@ export const SideBar: FC = async () => {
 
 // get the list of accounts
 const Accounts: FC = async () => {
-  const accounts = await get();
+  const accounts = await GET();
+
   return accounts?.map((account) => (
     <SidebarMenuSubItem key={`sidebar-account-${account._id}`}>
       <SidebarMenuSubButton asChild>

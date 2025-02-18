@@ -3,9 +3,9 @@ import { FC, ReactNode } from 'react';
 import { Breadcrumbs, BreadcrumbsProps } from './breadcrumbs';
 
 interface HeadingProps {
-  title: string;
+  title: string | ReactNode;
   children: ReactNode;
-  description?: string;
+  description?: string | ReactNode;
   links?: BreadcrumbsProps['links'];
 }
 

@@ -1,12 +1,12 @@
 import { AccountCategory, AccountType } from '@/entities/account';
 import z from 'zod';
 
-// form schema definition
-export const Schema = z
+// put form schema definition
+export const SchemaPut = z
   .object({
+    _id: z.string(),
     title: z.string().min(2).max(50),
     category: z.nativeEnum(AccountCategory),
-    balance: z.string().regex(/^\d+$/).transform(Number).or(z.number()),
     bill: z
       .string()
       .min(0)
@@ -51,17 +51,17 @@ export const Schema = z
     },
   );
 
-// form schema type
-export type SchemaType = z.infer<typeof Schema>;
+// put form schema type
+export type SchemaPutType = z.infer<typeof SchemaPut>;
 
-// form error type
-export type ErrorType = {
-  [k in keyof SchemaType]?: string;
+// put form error type
+export type ErrorPutType = {
+  [k in keyof SchemaPutType]?: string;
 };
 
-// form service response type
-export type StateType = {
-  errors: ErrorType;
+// put form service response type
+export type StatePutType = {
+  errors: ErrorPutType;
   status: null | 'success' | 'error';
   message: string;
   data?: AccountType;
