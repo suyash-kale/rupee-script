@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Plus,
   LayoutList,
+  Wallet,
 } from 'lucide-react';
 
 import Logo from '@/assets/logo.jpg';
@@ -41,6 +42,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { GET } from '@/services/account';
 import { Skeleton } from '@/components/ui/skeleton';
+import { BudgetCategory } from '@/entities/budget';
 
 // sidebar for private groups
 export const SideBar: FC = async () => {
@@ -66,7 +68,10 @@ export const SideBar: FC = async () => {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Account">
                   <div className="justify-between">
-                    <Link className="flex items-center gap-2" href="/account">
+                    <Link
+                      className="flex-1 flex items-center gap-2"
+                      href="/account"
+                    >
                       <Landmark className="size-4" />
                       Accounts
                     </Link>
@@ -106,6 +111,41 @@ export const SideBar: FC = async () => {
                     <Suspense fallback={<FallbackSubItem />}>
                       <Accounts />
                     </Suspense>
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+
+            <Collapsible asChild>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Account">
+                  <div className="justify-between">
+                    <Link
+                      className="flex-1 flex items-center gap-2"
+                      href="/budget"
+                    >
+                      <Wallet className="size-4" />
+                      Budget
+                    </Link>
+                  </div>
+                </SidebarMenuButton>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuAction className="data-[state=open]:rotate-90">
+                    <ChevronRight />
+                    <span className="sr-only">Toggle</span>
+                  </SidebarMenuAction>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {Object.entries(BudgetCategory).map(([key, value]) => (
+                      <SidebarMenuSubItem key={`sidebar-budget-${value}`}>
+                        <SidebarMenuSubButton asChild>
+                          <Link href={`/budget/${key.toLowerCase()}`}>
+                            {key}
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>

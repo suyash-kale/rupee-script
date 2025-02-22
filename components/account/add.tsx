@@ -121,7 +121,7 @@ export const Add: FC = () => {
         <div className="flex-1">
           <div className="grid grid-cols-5">
             <Card className="col-span-3 col-start-2 px-4 py-3 mt-4">
-              <Busy className="grid grid-cols-2 gap-4" loading={true}>
+              <Busy className="grid grid-cols-2 gap-4" loading={loading}>
                 <FormField
                   control={form.control}
                   name="title"

@@ -1,4 +1,4 @@
-import { LayoutList, Plus } from 'lucide-react';
+import { Landmark, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { FC, Suspense } from 'react';
 
@@ -16,7 +16,7 @@ function Page() {
       <Heading
         title={
           <span className="flex items-center gap-2">
-            <LayoutList />
+            <Landmark />
             Account List
           </span>
         }

@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { DATES } from '@/consts/dates';
+import { Busy } from '@/components/atom/busy';
 
 interface EditProps {
   readonly account?: AccountType;
@@ -111,7 +112,7 @@ export const Edit: FC<EditProps> = ({ account }) => {
                 Make changes to your Account here.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid grid-cols-2 gap-4 py-4">
+            <Busy className="grid grid-cols-2 gap-4 py-4" loading={loading}>
               <FormField
                 control={form.control}
                 name="title"
@@ -190,7 +191,7 @@ export const Edit: FC<EditProps> = ({ account }) => {
                   )}
                 />
               )}
-            </div>
+            </Busy>
             <DialogFooter>
               <Button type="submit" loading={loading}>
                 <Save />

@@ -4,7 +4,7 @@ import { Breadcrumbs, BreadcrumbsProps } from './breadcrumbs';
 
 interface HeadingProps {
   title: string | ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
   description?: string | ReactNode;
   links?: BreadcrumbsProps['links'];
 }
