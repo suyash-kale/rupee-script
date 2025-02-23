@@ -16,13 +16,12 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import {
-  SchemaDelete,
-  SchemaDeleteType,
-  StateDeleteType,
-} from '@/app/(private)/account/[id]/shared-delete';
+import { SchemaDelete, SchemaDeleteType } from '@/services/account/shared';
 import { DELETE } from '@/services/account';
 import { AccountType } from '@/entities/account';
+import { StateType } from '@/types/response';
+
+type StateDeleteType = StateType<AccountType>;
 
 interface DeleteProps {
   readonly account?: AccountType;

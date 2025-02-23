@@ -12,9 +12,9 @@ export interface AccountType {
   _id: string;
   // user ref
   user: Types.ObjectId;
+  title: string;
   // category of account
   category: AccountCategory;
-  title: string;
   // balance of cash account
   balance?: number;
   // credit card billing date

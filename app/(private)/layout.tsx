@@ -11,6 +11,8 @@ import Footer from '@/components/footer';
 
 const poppins = Poppins({ weight: ['200', '400', '600'], subsets: ['latin'] });
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Rupee Script',
   description: 'Be a step ahead in your financial journey.',

@@ -5,7 +5,7 @@ import { Heading } from '@/components/template/heading';
 import { DETAIL } from '@/services/account';
 import { Badge } from '@/components/ui/badge';
 import { AccountCategory } from '@/entities/account';
-import { Edit } from '@/components/account/edit';
+import { Add } from '@/components/account/add';
 import { Delete } from '@/components/account/delete';
 
 interface PageProps {
@@ -52,7 +52,7 @@ async function Page({ params }: PageProps) {
       links={[{ title: 'Account', href: '/account' }, { title: account.title }]}
     >
       <Delete account={account} />
-      <Edit account={account} />
+      <Add account={account} />
     </Heading>
   );
 }

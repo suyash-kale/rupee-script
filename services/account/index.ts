@@ -7,48 +7,50 @@ import { auth } from '@/auth';
 import connect from '@/mongo/connect';
 import Account from '@/mongo/entities/account';
 import { AccountCategory, AccountType } from '@/entities/account';
+import { StateType } from '@/types/response';
 import {
   SchemaPost,
   SchemaPostType,
-  StatePostType,
-} from '@/app/(private)/account/add/shared-post';
-import {
   SchemaPut,
   SchemaPutType,
-  StatePutType,
-} from '@/app/(private)/account/[id]/shared-put';
-import {
   SchemaDelete,
   SchemaDeleteType,
-  StateDeleteType,
-} from '@/app/(private)/account/[id]/shared-delete';
+} from '@/services/account/shared';
+import { plain } from '@/util/json';
 
 // post account service
 // adding account to database
-export const POST = async (data: SchemaPostType): Promise<StatePostType> => {
+export const POST = async (
+  data: SchemaPostType,
+): Promise<StateType<AccountType>> => {
   await connect();
   try {
     // validating form data
     await SchemaPost.parseAsync(data);
-    // checking if account with same title already exists
-    const exists = await Account.findOne({ title: data.title });
-    if (exists) {
-      return {
-        status: 'error',
-        message: 'Account with this Title already exists.',
-        errors: {
-          title: 'Title already exists.',
-        },
-      };
-    }
     // getting current user session
     const session = await auth();
     if (session?.user) {
+      // checking if account with same title already exists
+      const exists = await Account.findOne({
+        title: { $regex: new RegExp(`^${data.title}$`, 'i') },
+        user: session?.user.id,
+        $or: [{ deleted: { $exists: false } }, { deleted: false }],
+      }).select('_id');
+      if (exists) {
+        return {
+          status: 'error',
+          message: 'Account with this Title already exists.',
+          errors: {
+            title: ['Title already exists.'],
+          },
+        };
+      }
       // creating account and saving to database
       const account = await Account.create({ ...data, user: session?.user.id });
       await account.save();
+      revalidatePath('/account');
       return {
-        data: account,
+        data: plain(account),
         status: 'success',
         message: 'Account added Successfully.',
         errors: {},
@@ -84,11 +86,17 @@ export const POST = async (data: SchemaPostType): Promise<StatePostType> => {
 // get list of accounts service
 export const GET = async (): Promise<undefined | Array<AccountType>> => {
   await connect();
-  const account = await Account.find({
-    // getting only undeleted accounts
-    $or: [{ deleted: { $exists: false } }, { deleted: false }],
-  });
-  return account ? JSON.parse(JSON.stringify(account)) : undefined;
+  const session = await auth();
+  if (session?.user) {
+    const account = await Account.find({
+      user: session?.user.id,
+      // getting only undeleted accounts
+      $or: [{ deleted: { $exists: false } }, { deleted: false }],
+    }).select('_id title category balance bill due');
+    return account;
+  } else {
+    throw new Error('Authentication failed.');
+  }
 };
 
 // get account detail service
@@ -96,33 +104,45 @@ export const DETAIL = async (
   _id: AccountType['_id'],
 ): Promise<undefined | null | AccountType> => {
   await connect();
-  const account = await Account.findOne({
-    // getting only undeleted accounts
-    $or: [{ deleted: { $exists: false } }, { deleted: false }],
-    // getting account by id
-    $and: [{ _id }],
-  });
-  return account ? JSON.parse(JSON.stringify(account)) : undefined;
+  const session = await auth();
+  if (session?.user) {
+    const account = await Account.findOne({
+      user: session?.user.id,
+      // getting only undeleted accounts
+      $or: [{ deleted: { $exists: false } }, { deleted: false }],
+      // getting account by id
+      $and: [{ _id }],
+    }).select('_id title category balance bill due');
+    return plain(account);
+  } else {
+    throw new Error('Authentication failed.');
+  }
 };
 
 // put account service
-export const PUT = async (data: SchemaPutType): Promise<StatePutType> => {
+export const PUT = async (
+  data: SchemaPutType,
+): Promise<StateType<AccountType>> => {
   await connect();
   try {
     // validating form data
     await SchemaPut.parseAsync(data);
-    // making sure account exists
-    const account = await Account.findById(data._id);
-    if (!account) {
-      return {
-        status: 'error',
-        message: 'Account does not exists.',
-        errors: {},
-      };
-    }
     // getting current user session
     const session = await auth();
     if (session?.user) {
+      // making sure account exists
+      const account = await Account.findOne({
+        _id: data._id,
+        user: session?.user.id,
+        $or: [{ deleted: { $exists: false } }, { deleted: false }],
+      }).select('_id title category balance bill due');
+      if (!account) {
+        return {
+          status: 'error',
+          message: 'Account does not exists.',
+          errors: {},
+        };
+      }
       // saving updated values to database
       account.title = data.title;
       if (account.category === AccountCategory.Credit) {
@@ -134,7 +154,7 @@ export const PUT = async (data: SchemaPutType): Promise<StatePutType> => {
       revalidatePath(`/account/${data._id}`);
       revalidatePath('/account');
       return {
-        data: JSON.parse(JSON.stringify(account)),
+        data: plain(account),
         status: 'success',
         message: 'Account updated Successfully.',
         errors: {},
@@ -170,26 +190,30 @@ export const PUT = async (data: SchemaPutType): Promise<StatePutType> => {
 // delete account service
 export const DELETE = async (
   data: SchemaDeleteType,
-): Promise<StateDeleteType> => {
+): Promise<StateType<AccountType>> => {
   await connect();
   try {
     // validating form data
     await SchemaDelete.parseAsync(data);
-    // making sure account exists
-    const account = await Account.findById(data._id);
-    if (!account) {
-      return {
-        status: 'error',
-        message: 'Account does not exists.',
-      };
-    }
     // getting current user session
     const session = await auth();
     if (session?.user) {
+      // making sure account exists
+      const account = await Account.findOne({
+        _id: data._id,
+        user: session?.user.id,
+        $or: [{ deleted: { $exists: false } }, { deleted: false }],
+      });
+      if (!account) {
+        return {
+          status: 'error',
+          message: 'Account does not exists.',
+        };
+      }
       // updating account deletion status
       account.deleted = true;
       await account.save();
-      revalidatePath('/account');
+      setTimeout(() => revalidatePath('/account'), 0);
       return {
         status: 'success',
         message: 'Account deleted Successfully.',

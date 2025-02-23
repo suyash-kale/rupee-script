@@ -1,13 +1,13 @@
-import { Landmark, Plus } from 'lucide-react';
+import { Landmark } from 'lucide-react';
 import Link from 'next/link';
 import { FC, Suspense } from 'react';
 
 import { Heading } from '@/components/template/heading';
-import { Button } from '@/components/ui/button';
 import { GET } from '@/services/account';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import { Add } from '@/components/account/add';
 
 // account list page
 function Page() {
@@ -23,12 +23,7 @@ function Page() {
         description="List of all your accounts"
         links={[{ title: 'Account' }]}
       >
-        <Button asChild>
-          <Link href="/account/add">
-            <Plus />
-            Add
-          </Link>
-        </Button>
+        <Add />
       </Heading>
       <div className="flex-1 p-4">
         <Suspense fallback={<Fallback />}>
@@ -50,7 +45,7 @@ const List: FC = async () => {
           key={account._id}
           className="relative"
         >
-          <Badge variant="outline" className="absolute top-0 right-0">
+          <Badge variant="outline" className="absolute top-1 right-1">
             {account.category}
           </Badge>
           <Card key={account._id} className="p-4">
