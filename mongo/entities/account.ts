@@ -1,22 +1,31 @@
-import mongoose, { model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
+import { prop, getModelForClass } from '@typegoose/typegoose';
+import type { Ref } from '@typegoose/typegoose';
 
-import { AccountType, AccountCategory } from '@/entities/account';
+import { User } from '@/mongo/entities/user';
+import { AccountCategory } from '@/entities/account';
 
-const AccountSchema = new Schema<AccountType>({
-  // user ref
-  user: { ref: 'User', type: Schema.Types.ObjectId, required: true },
-  // category of account
-  category: { type: String, required: true, enum: AccountCategory },
-  title: { type: String, required: true },
-  // balance of cash account
-  balance: { type: Number },
-  // credit card billing date
-  bill: { type: Number },
-  // credit card due date
-  due: { type: Number },
-  // account deletion status
-  deleted: { type: Boolean, default: false },
-});
+export class Account {
+  @prop({ ref: () => User, required: true })
+  public user: Ref<User>;
 
-export default mongoose.models.Account ||
-  model<AccountType>('Account', AccountSchema);
+  @prop({ required: true, enum: AccountCategory, type: String })
+  public category: AccountCategory;
+
+  @prop({ required: true })
+  public title: string;
+
+  @prop()
+  public balance: number;
+
+  @prop()
+  public bill?: number;
+
+  @prop()
+  public due?: number;
+
+  @prop()
+  public deleted?: boolean;
+}
+
+export default mongoose.models.Account || getModelForClass(Account);

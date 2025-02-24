@@ -1,11 +1,15 @@
-import mongoose, { model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
+import { prop, getModelForClass } from '@typegoose/typegoose';
 
-import { UserType } from '@/entities/user';
+export class User {
+  @prop({ required: true })
+  public name: string;
 
-const UserSchema = new Schema<UserType>({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  image: String,
-});
+  @prop({ required: true })
+  public email: string;
 
-export default mongoose.models.User || model<UserType>('User', UserSchema);
+  @prop()
+  public image?: null | string;
+}
+
+export default mongoose.models.User || getModelForClass(User);
